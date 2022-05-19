@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    pets: alpine2
+  name: tailer-logger
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      pets: alpine2
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        pets: alpine2
+      name: tailer-logger
+    spec:
+      volumes:
+      - name: bloogers
+        emptyDir: {}
+      containers:
+      - name: logger-ma-bob
+        command: ["/logger-tailer.sh"]
+        args: ["logger"]
+        image: sbrinkmeyer/alpine:latest
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: bloogers
+          mountPath: /var/log
+      - name: tailer-ma-bob
+        command: ["/logger-tailer.sh"]
+        args: ["tailer"]
+        image: sbrinkmeyer/alpine:latest
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: bloogers
+          mountPath: /var/log
+
